@@ -1,26 +1,33 @@
 import React from 'react';
 import { SafeAreaView, StyleSheet, useWindowDimensions, useColorScheme } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import { HelloWave } from '@/components/HelloWave';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { ColorChangingIcons } from '@/components/ColorChangingIcons';
 
-const icons = [
-  { name: 'heart', text: 'Heart' },
-  { name: 'logo-github', text: 'GitHub' },
-  { name: 'planet', text: 'Planet' },
-  { name: 'rocket', text: 'Rocket' },
-  { name: 'star', text: 'Star' },
-];
-
-const colors = ['#FF69B4', '#FF6347', '#4169E1', '#32CD32', '#FFD700'];
-const colorNames = ['Pink', 'Tomato', 'Royal Blue', 'Lime Green', 'Gold'];
-
-
-export default function HomeScreen() {
+export default function LettersScreen() {
   const { width: screenWidth } = useWindowDimensions();
   const colorScheme = useColorScheme();
+  const { t } = useTranslation();
+
+  const icons = [
+    { name: 'heart', text: 'icons.heart' },
+    { name: 'logo-github', text: 'icons.github' },
+    { name: 'planet', text: 'icons.planet' },
+    { name: 'rocket', text: 'icons.rocket' },
+    { name: 'star', text: 'icons.star' },
+  ];
+
+  const colors = ['#FF69B4', '#FF6347', '#4169E1', '#32CD32', '#FFD700'];
+  const colorNames = [
+    'colors.pink',
+    'colors.tomato',
+    'colors.royalBlue',
+    'colors.limeGreen',
+    'colors.gold',
+  ];
 
   return (
     <SafeAreaView style={[
@@ -28,17 +35,17 @@ export default function HomeScreen() {
       { backgroundColor: colorScheme === 'dark' ? '#000' : '#fff' }
     ]}>
       <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Shapes</ThemedText>
+        <ThemedText type="title">{t('appTitle')}</ThemedText>
       </ThemedView>
       <ThemedView style={styles.waveContainer}>
         <HelloWave width={screenWidth} />
       </ThemedView>
       <ThemedView style={styles.iconsContainer}>
-      <ColorChangingIcons 
+        <ColorChangingIcons 
           icons={icons}
           colors={colors}
           colorNames={colorNames}
-          title="Icons"
+          title="appTitle"
         />
       </ThemedView>
     </SafeAreaView>

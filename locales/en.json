@@ -1,0 +1,17 @@
+{
+  "appTitle": "Laura App",
+  "icons": {
+    "heart": "Heart",
+    "github": "GitHub",
+    "planet": "Planet",
+    "rocket": "Rocket",
+    "star": "Star"
+  },
+  "colors": {
+    "pink": "Pink",
+    "tomato": "Tomato",
+    "royalBlue": "Royal Blue",
+    "limeGreen": "Lime Green",
+    "gold": "Gold"
+  }
+}

@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 40,
     fontWeight: 'bold',
-    lineHeight: 32,
+    lineHeight: 50,
     textAlign: 'center',
   },
   subtitle: {

@@ -1,0 +1,17 @@
+{
+  "appTitle": "Aplicación Laura",
+  "icons": {
+    "heart": "Corazón",
+    "github": "GitHub",
+    "planet": "Planeta",
+    "rocket": "Cohete",
+    "star": "Estrella"
+  },
+  "colors": {
+    "pink": "Rosa",
+    "tomato": "Tomate",
+    "royalBlue": "Azul Real",
+    "limeGreen": "Verde Lima",
+    "gold": "Oro"
+  }
+}
