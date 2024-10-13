@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { View, Text, StyleSheet, Dimensions, TouchableOpacity, useColorScheme } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -6,7 +6,6 @@ import { NavigationContainer, useNavigation, DefaultTheme, DarkTheme } from '@re
 import { GestureHandlerRootView, PanGestureHandler, State } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
-import { useLanguage } from './LanguageContext';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const SWIPE_THRESHOLD = SCREEN_WIDTH * 0.25;
@@ -29,7 +28,6 @@ function IconScreen({ route, navigation }) {
     const { icon, colorIndex, colors, colorNames } = route.params;
     const colorScheme = useColorScheme();
     const { t } = useTranslation();
-    const { language } = useLanguage();
 
     const changeColor = useCallback(() => {
         const newColorIndex = (colorIndex + 1) % colors.length;
@@ -69,7 +67,13 @@ function getNextScreenName(currentIcon, icons) {
 export function ColorChangingIcons({ icons, colors, colorNames, title }: ColorChangingIconsProps) {
     const colorScheme = useColorScheme();
     const { t } = useTranslation();
-    const { language } = useLanguage();
+
+    const memoizedIcons = useMemo(() => icons.map(icon => ({
+        ...icon,
+        text: t(icon.text)
+    })), [icons, t]);
+
+    const memoizedColorNames = useMemo(() => colorNames.map(name => t(name)), [colorNames, t]);
 
     return (
         <SafeAreaProvider>
@@ -106,12 +110,12 @@ export function ColorChangingIcons({ icons, colors, colorNames, title }: ColorCh
                             headerTitle: t(title),
                         })}
                     >
-                        {icons.map((icon) => (
+                        {memoizedIcons.map((icon) => (
                             <Stack.Screen 
                                 key={icon.name}
                                 name={icon.name}
                                 component={IconScreen}
-                                initialParams={{ icon, colorIndex: 0, colors, colorNames }}
+                                initialParams={{ icon, colorIndex: 0, colors, colorNames: memoizedColorNames }}
                             />
                         ))}
                     </Stack.Navigator>
