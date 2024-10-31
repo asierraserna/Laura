@@ -10,19 +10,60 @@ import { useLanguage } from '@/components/LanguageContext';
 
 const icons = [
   { name: 'heart', text: 'icons.heart' },
-  { name: 'logo-github', text: 'icons.github' },
-  { name: 'planet', text: 'icons.planet' },
-  { name: 'rocket', text: 'icons.rocket' },
+  { name: 'ellipse', text: 'icons.ellipse' },
+  { name: 'add', text: 'icons.add' },
+  { name: 'square', text: 'icons.square' },
   { name: 'star', text: 'icons.star' },
+  { name: 'triangle', text: 'icons.triangle' },  
+  { name: 'tablet-landscape', text: 'icons.tabletLandscape' },
+  { name: 'egg', text: 'icons.egg' },
+  { name: 'arrow-forward', text: 'icons.arrowForward' },
+  { name: 'cloud', text: 'icons.cloud' },  
+  { name: 'snow', text: 'icons.snow' },
+  { name: 'sparkles', text: 'icons.sparkles' },
+  { name: 'cog', text: 'icons.cog' },
+  { name: 'diamond', text: 'icons.diamond' },
+  { name: 'flame', text: 'icons.flame' },
+  { name: 'flash', text: 'icons.flash' },
+  { name: 'hand-right', text: 'icons.handRight' },
+  { name: 'happy', text: 'icons.happy' },
+  { name: 'shield', text: 'icons.shield' },
+  { name: 'sunny', text: 'icons.sunny' },
+  { name: 'moon', text: 'icons.moon' },
 ];
 
-const colors = ['#FF69B4', '#FF6347', '#4169E1', '#32CD32', '#FFD700'];
+const colors = [
+  '#FF69B4', // Pink
+  '#FF6347', // Tomato
+  '#4169E1', // Royal Blue
+  '#32CD32', // Lime Green
+  '#FFD700', // Gold
+  '#FF0000', // Red
+  '#008000', // Green
+  '#0000FF', // Blue
+  '#FFFF00', // Yellow
+  '#800080', // Purple
+  '#00FFFF', // Cyan
+  '#808080', // Grey
+  '#FFA500', // Orange
+  '#A52A2A' // Brown
+];
+
 const colorNames = [
   'colors.pink',
   'colors.tomato',
   'colors.royalBlue',
   'colors.limeGreen',
-  'colors.gold'
+  'colors.gold',
+  'colors.red',
+  'colors.green',
+  'colors.blue',
+  'colors.yellow',
+  'colors.purple',
+  'colors.cyan',
+  'colors.grey',
+  'colors.orange',
+  'colors.brown'
 ];
 
 export default function HomeScreen() {
@@ -40,14 +81,14 @@ export default function HomeScreen() {
         <ThemedText type="title">{t('shapes')}</ThemedText>
       </ThemedView>
       <ThemedView style={styles.waveContainer}>
-        <HelloWave width={screenWidth} />
+        <HelloWave />
       </ThemedView>
       <ThemedView style={styles.iconsContainer}>
       <ColorChangingIcons 
           icons={icons}
           colors={colors}
           colorNames={colorNames}
-          title="icons"
+          title="shapes"
         />
       </ThemedView>
     </SafeAreaView>

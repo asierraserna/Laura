@@ -39,19 +39,19 @@ export function HelloWave() {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={startAnimation}>
-        <Animated.View style={animatedStyle}>
-          <ThemedText style={styles.text}>👋</ThemedText>
-        </Animated.View>
-      </TouchableOpacity>
       <View style={styles.languageButtons}>
         <TouchableOpacity onPress={() => setLanguage('en')} style={styles.languageButton}>
-          <Flag code="GB" size={24} />
+          <Flag code="GB" size={32} />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => setLanguage('es')} style={styles.languageButton}>
-          <Flag code="ES" size={24} />
+          <Flag code="ES" size={32} />
         </TouchableOpacity>
-        {/* Add more language buttons as needed */}
+        <TouchableOpacity onPress={() => setLanguage('pl')} style={styles.languageButton}>
+          <Flag code="PL" size={32} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => setLanguage('de')} style={styles.languageButton}>
+          <Flag code="DE" size={32} />
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -72,6 +72,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   languageButton: {
-    marginHorizontal: 5,
+    marginHorizontal: 20,
   },
 });

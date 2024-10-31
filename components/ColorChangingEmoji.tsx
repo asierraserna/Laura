@@ -1,6 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
 import { View, Text, StyleSheet, Dimensions, TouchableOpacity, useColorScheme } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer, useNavigation, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { GestureHandlerRootView, PanGestureHandler, State } from 'react-native-gesture-handler';
@@ -13,7 +12,7 @@ const SWIPE_THRESHOLD = SCREEN_WIDTH * 0.25;
 const Stack = createStackNavigator();
 
 interface IconItem {
-  name: string;
+  emoji: string;
   text: string;
 }
 
@@ -25,7 +24,7 @@ interface ColorChangingIconsProps {
 }
 
 function IconScreen({ route, navigation }) {
-    const { icon, colorIndex, colors, colorNames, icons } = route.params; // Add icons here
+    const { icon, colorIndex, colors, colorNames, icons } = route.params;
 
     const colorScheme = useColorScheme();
     const { t } = useTranslation();
@@ -44,7 +43,7 @@ function IconScreen({ route, navigation }) {
                     console.log("No screen to go back to");
                 }
             } else if (nativeEvent.translationX < -SWIPE_THRESHOLD) {
-                const nextScreenName = getNextScreenName(icon, icons); // Now icons is defined
+                const nextScreenName = getNextScreenName(icon, icons);
                 if (nextScreenName) {
                     navigation.navigate(nextScreenName);
                 }
@@ -57,7 +56,7 @@ function IconScreen({ route, navigation }) {
             <View style={[styles.container, { backgroundColor: colorScheme === 'dark' ? '#000' : '#fff' }]}>
                 <Text style={[styles.colorName, { color: colors[colorIndex] }]}>{t(colorNames[colorIndex])}</Text>
                 <TouchableOpacity onPress={changeColor} style={styles.itemContainer}>
-                    <Ionicons name={icon.name} size={150} color={colors[colorIndex]} />
+                    <Text style={[styles.emoji, { color: colors[colorIndex] }]}>{icon.emoji}</Text>
                     <Text style={[styles.text, { color: colors[colorIndex] }]}>{t(icon.text)}</Text>
                 </TouchableOpacity>
             </View>
@@ -66,13 +65,9 @@ function IconScreen({ route, navigation }) {
 }
 
 function getNextScreenName(currentIcon, icons) {
-    if (!icons) {
-        console.error("Icons array is undefined");
-        return null; // or handle the error as needed
-    }
-    const currentIndex = icons.findIndex(icon => icon.name === currentIcon.name);
+    const currentIndex = icons.findIndex(icon => icon.emoji === currentIcon.emoji);
     const nextIndex = (currentIndex + 1) % icons.length;
-    return icons[nextIndex].name;
+    return icons[nextIndex].emoji;
 }
 
 export function ColorChangingIcons({ icons, colors, colorNames, title }: ColorChangingIconsProps) {
@@ -107,14 +102,14 @@ export function ColorChangingIcons({ icons, colors, colorNames, title }: ColorCh
                             headerTitleAlign: 'center',
                             headerLeft: () => (
                                 <TouchableOpacity onPress={() => navigation.goBack()} style={styles.headerButton}>
-                                    <Ionicons name="chevron-back" size={24} color={colorScheme === 'dark' ? '#fff' : '#000'} />
+                                    <Text style={{ fontSize: 24, color: colorScheme === 'dark' ? '#fff' : '#000' }}>⬅️</Text>
                                 </TouchableOpacity>
                             ),
                             headerRight: () => {
                                 const nextScreenName = getNextScreenName(route.params.icon, icons);
                                 return (
                                     <TouchableOpacity onPress={() => navigation.navigate(nextScreenName)} style={styles.headerButton}>
-                                        <Ionicons name="chevron-forward" size={24} color={colorScheme === 'dark' ? '#fff' : '#000'} />
+                                        <Text style={{ fontSize: 24, color: colorScheme === 'dark' ? '#fff' : '#000' }}>➡️</Text>
                                     </TouchableOpacity>
                                 );
                             },
@@ -123,10 +118,10 @@ export function ColorChangingIcons({ icons, colors, colorNames, title }: ColorCh
                     >
                         {icons.map((icon) => (
                             <Stack.Screen 
-                                key={icon.name}
-                                name={icon.name}
+                                key={icon.emoji}
+                                name={icon.emoji}
                                 component={IconScreen}
-                                initialParams={{ icon, colorIndex: 0, colors, colorNames, icons }} // Pass icons here
+                                initialParams={{ icon, colorIndex: 0, colors, colorNames, icons }}
                             />
                         ))}
                     </Stack.Navigator>
@@ -145,6 +140,9 @@ const styles = StyleSheet.create({
     itemContainer: {
         alignItems: 'center',
         justifyContent: 'center',
+    },
+    emoji: {
+        fontSize: 150,
     },
     text: {
         fontSize: 48,
