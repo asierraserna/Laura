@@ -41,7 +41,7 @@ export function HelloWave() {
     <View style={styles.container}>
       <View style={styles.languageButtons}>
         <TouchableOpacity onPress={() => setLanguage('en')} style={styles.languageButton}>
-          <Flag code="GB" size={32} />
+          <Flag code="US" size={32} />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => setLanguage('es')} style={styles.languageButton}>
           <Flag code="ES" size={32} />
