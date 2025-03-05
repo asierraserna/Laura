@@ -1,5 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import 'intl-pluralrules';
 
 const LanguageContext = createContext({
   language: 'en',
