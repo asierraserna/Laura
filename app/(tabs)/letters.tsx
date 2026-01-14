@@ -1,12 +1,13 @@
 import React from 'react';
-import { SafeAreaView, StyleSheet, useWindowDimensions, useColorScheme } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import { StyleSheet, useColorScheme, useWindowDimensions } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { ColorChangingIcons } from '@/components/ColorChangingEmoji';
 import { HelloWave } from '@/components/HelloWave';
+import { useLanguage } from '@/components/LanguageContext';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { ColorChangingIcons } from '@/components/ColorChangingEmoji';
-import { useLanguage } from '@/components/LanguageContext';
 
 const icons = [
   

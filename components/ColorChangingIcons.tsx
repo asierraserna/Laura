@@ -1,12 +1,15 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Dimensions, TouchableOpacity, useColorScheme } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { createStackNavigator } from '@react-navigation/stack';
-import { NavigationContainer, useNavigation, DefaultTheme, DarkTheme } from '@react-navigation/native';
+import { NavigationIndependentTree } from '@react-navigation/core';
+import type { RouteProp } from '@react-navigation/native';
+import { DarkTheme, DefaultTheme, NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator, type StackNavigationProp } from '@react-navigation/stack';
+import * as Speech from 'expo-speech';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Dimensions, StyleSheet, Text, TouchableOpacity, useColorScheme, View } from 'react-native';
+import type { PanGestureHandlerGestureEvent } from 'react-native-gesture-handler';
 import { GestureHandlerRootView, PanGestureHandler, State } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { useTranslation } from 'react-i18next';
-import * as Speech from 'expo-speech';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const SWIPE_THRESHOLD = SCREEN_WIDTH * 0.25;
@@ -25,7 +28,18 @@ interface ColorChangingIconsProps {
     title: string;
 }
 
-function IconScreen({ route, navigation }) {
+type IconScreenRouteParams = {
+    icon: IconItem;
+    colorIndex: number;
+    colors: string[];
+    colorNames: string[];
+    icons: IconItem[];
+};
+
+type IconScreenRouteProp = RouteProp<Record<string, IconScreenRouteParams>, string>;
+type IconScreenNavigationProp = StackNavigationProp<Record<string, IconScreenRouteParams>, string>;
+
+function IconScreen({ route, navigation }: { route: IconScreenRouteProp; navigation: IconScreenNavigationProp }) {
     const { icon, colorIndex, colors, colorNames, icons } = route.params; // Add icons here
 
     //const [availableVoices, setAvailableVoices] = useState([]); // {{ edit_2 }}
@@ -74,7 +88,7 @@ function IconScreen({ route, navigation }) {
         navigation.setParams({ colorIndex: newColorIndex });
     }, [colorIndex, navigation, colors]);
 
-    const onGestureEvent = ({ nativeEvent }) => {
+    const onGestureEvent = ({ nativeEvent }: PanGestureHandlerGestureEvent) => {
         if (nativeEvent.state === State.END) {
             if (nativeEvent.translationX > SWIPE_THRESHOLD) {
                 if (navigation.canGoBack()) {
@@ -91,7 +105,7 @@ function IconScreen({ route, navigation }) {
         }
     };
 
-    const speakText = (text) => { // {{ edit_8 }}
+    const speakText = (text: string) => { // {{ edit_8 }}
         Speech.speak(text, {
             //voice: selectedVoice,
             pitch: pitch,
@@ -128,7 +142,7 @@ function IconScreen({ route, navigation }) {
 
 }
 
-function getNextScreenName(currentIcon, icons) {
+function getNextScreenName(currentIcon: IconItem, icons: IconItem[]): string {
     if (!icons) {
         console.error("Icons array is undefined");
         return null; // or handle the error as needed
@@ -145,10 +159,10 @@ export function ColorChangingIcons({ icons, colors, colorNames, title }: ColorCh
     return (
         <SafeAreaProvider>
             <GestureHandlerRootView style={{ flex: 1 }}>
-                <NavigationContainer
-                    independent={true}
-                    theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
-                >
+                <NavigationIndependentTree>
+                    <NavigationContainer
+                        theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
+                    >
                     <Stack.Navigator
                         screenOptions={({ navigation, route }) => ({
                             headerShown: true,
@@ -162,7 +176,7 @@ export function ColorChangingIcons({ icons, colors, colorNames, title }: ColorCh
                             },
                             headerTitleAlign: 'center',
                             headerLeft: () => {
-                                const currentIconIndex = icons.findIndex(icon => icon.name === route.params.icon.name); // Get the current icon index
+                                const currentIconIndex = route.params ? icons.findIndex(icon => icon.name === route.params.icon.name) : 0;
                                 const previousIconIndex = currentIconIndex === 0 ? icons.length - 1 : currentIconIndex - 1; // Get the previous icon index, wrap around if at the first icon
                             
                                 return (
@@ -177,7 +191,7 @@ export function ColorChangingIcons({ icons, colors, colorNames, title }: ColorCh
                                 );
                             },
                             headerRight: () => {
-                                const nextScreenName = getNextScreenName(route.params.icon, icons);
+                                const nextScreenName = route.params ? getNextScreenName(route.params.icon, icons) : icons[0].name;
                                 return (
                                     <TouchableOpacity onPress={() => navigation.navigate(nextScreenName)} style={styles.headerButton}>
                                         <Ionicons name="chevron-forward" size={24} color={colorScheme === 'dark' ? '#fff' : '#000'} />
@@ -196,7 +210,8 @@ export function ColorChangingIcons({ icons, colors, colorNames, title }: ColorCh
                             />
                         ))}
                     </Stack.Navigator>
-                </NavigationContainer>
+                    </NavigationContainer>
+                </NavigationIndependentTree>
             </GestureHandlerRootView>
         </SafeAreaProvider>
     );
