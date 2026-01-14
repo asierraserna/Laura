@@ -42,7 +42,7 @@ type IconScreenRouteParams = {
 type IconScreenRouteProp = RouteProp<Record<string, IconScreenRouteParams>, string>;
 type IconScreenNavigationProp = StackNavigationProp<Record<string, IconScreenRouteParams>, string>;
 
-function IconScreen({ route, navigation }: { route: IconScreenRouteProp; navigation: IconScreenNavigationProp }) {
+const IconScreen: React.FC<{ route: IconScreenRouteProp; navigation: IconScreenNavigationProp }> = ({ route, navigation }) => {
     const { icon, colorIndex, colors, colorNames, icons } = route.params;
     //const [availableVoices, setAvailableVoices] = useState([]); // {{ edit_2 }}
     //const [selectedVoice, setSelectedVoice] = useState('com.apple.speech.synthesis.voice.Boing'); // {{ edit_3 }}
@@ -111,7 +111,7 @@ function IconScreen({ route, navigation }: { route: IconScreenRouteProp; navigat
             } else if (nativeEvent.translationX < -SWIPE_THRESHOLD) {
                 const nextScreenName = getNextScreenName(icon, icons);
                 if (nextScreenName) {
-                    navigation.navigate(nextScreenName);
+                    navigation.navigate(nextScreenName as never);
                 }
             }
         }
@@ -149,7 +149,7 @@ function IconScreen({ route, navigation }: { route: IconScreenRouteProp; navigat
             </View>
         </PanGestureHandler>
     );
-}
+};
 
 function getNextScreenName(currentIcon: IconItem, icons: IconItem[]): string {
     const currentIndex = icons.findIndex(icon => icon.emoji === currentIcon.emoji);
@@ -170,7 +170,7 @@ export function ColorChangingIcons({ icons, colors, colorNames, title }: ColorCh
                         theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
                     >
                         <Stack.Navigator
-                            screenOptions={({ navigation, route }) => ({
+                            screenOptions={({ navigation, route }: any) => ({
                                 headerShown: true,
                                 gestureEnabled: false,
                                 headerStyle: {
@@ -182,7 +182,7 @@ export function ColorChangingIcons({ icons, colors, colorNames, title }: ColorCh
                                 },
                                 headerTitleAlign: 'center',
                                 headerLeft: () => {
-                                    const currentIconIndex = route.params ? icons.findIndex(icon => icon.name === route.params.icon.name) : 0;
+                                    const currentIconIndex = route.params ? icons.findIndex(icon => icon.name === route.params?.icon?.name) : 0;
                                     const previousIconIndex = currentIconIndex === 0 ? icons.length - 1 : currentIconIndex - 1;
 
                                     return (
@@ -199,7 +199,7 @@ export function ColorChangingIcons({ icons, colors, colorNames, title }: ColorCh
                                 headerRight: () => {
                                     const nextScreenName = route.params ? getNextScreenName(route.params.icon, icons) : icons[0].emoji;
                                     return (
-                                        <TouchableOpacity onPress={() => navigation.navigate(nextScreenName)} style={styles.headerButton}>
+                                        <TouchableOpacity onPress={() => navigation.navigate(nextScreenName as never)} style={styles.headerButton}>
                                             <Ionicons name="chevron-forward" size={24} color={colorScheme === 'dark' ? '#fff' : '#000'} />
                                         </TouchableOpacity>
                                     );
@@ -211,7 +211,7 @@ export function ColorChangingIcons({ icons, colors, colorNames, title }: ColorCh
                                 <Stack.Screen
                                     key={icon.emoji}
                                     name={icon.emoji}
-                                    component={IconScreen}
+                                    component={IconScreen as any}
                                     initialParams={{ icon, colorIndex: 0, colors, colorNames, icons }}
                                 />
                             ))}

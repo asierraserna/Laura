@@ -39,7 +39,7 @@ type IconScreenRouteParams = {
 type IconScreenRouteProp = RouteProp<Record<string, IconScreenRouteParams>, string>;
 type IconScreenNavigationProp = StackNavigationProp<Record<string, IconScreenRouteParams>, string>;
 
-function IconScreen({ route, navigation }: { route: IconScreenRouteProp; navigation: IconScreenNavigationProp }) {
+const IconScreen: React.FC<{ route: IconScreenRouteProp; navigation: IconScreenNavigationProp }> = ({ route, navigation }) => {
     const { icon, colorIndex, colors, colorNames, icons } = route.params; // Add icons here
 
     //const [availableVoices, setAvailableVoices] = useState([]); // {{ edit_2 }}
@@ -99,7 +99,7 @@ function IconScreen({ route, navigation }: { route: IconScreenRouteProp; navigat
             } else if (nativeEvent.translationX < -SWIPE_THRESHOLD) {
                 const nextScreenName = getNextScreenName(icon, icons); // Now icons is defined
                 if (nextScreenName) {
-                    navigation.navigate(nextScreenName);
+                    navigation.navigate(nextScreenName as never);
                 }
             }
         }
@@ -129,7 +129,7 @@ function IconScreen({ route, navigation }: { route: IconScreenRouteProp; navigat
                 </View>
 
                 <TouchableOpacity onPress={() => { changeColor(); }} style={styles.itemContainer}>
-                <Ionicons name={icon.name} size={150} color={colors[colorIndex]} />
+                <Ionicons name={icon.name as any} size={150} color={colors[colorIndex]} />
                     <Text style={[styles.text, { color: colors[colorIndex] }]}>{t(icon.text)}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => { speakText(t(icon.text)); }} style={styles.itemContainer}>
@@ -138,14 +138,12 @@ function IconScreen({ route, navigation }: { route: IconScreenRouteProp; navigat
             </View>
         </PanGestureHandler>
     );
-
-
-}
+};
 
 function getNextScreenName(currentIcon: IconItem, icons: IconItem[]): string {
-    if (!icons) {
-        console.error("Icons array is undefined");
-        return null; // or handle the error as needed
+    if (!icons || icons.length === 0) {
+        console.error("Icons array is undefined or empty");
+        return "";
     }
     const currentIndex = icons.findIndex(icon => icon.name === currentIcon.name);
     const nextIndex = (currentIndex + 1) % icons.length;
@@ -164,7 +162,7 @@ export function ColorChangingIcons({ icons, colors, colorNames, title }: ColorCh
                         theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
                     >
                     <Stack.Navigator
-                        screenOptions={({ navigation, route }) => ({
+                        screenOptions={({ navigation, route }: any) => ({
                             headerShown: true,
                             gestureEnabled: false,
                             headerStyle: {
@@ -176,7 +174,7 @@ export function ColorChangingIcons({ icons, colors, colorNames, title }: ColorCh
                             },
                             headerTitleAlign: 'center',
                             headerLeft: () => {
-                                const currentIconIndex = route.params ? icons.findIndex(icon => icon.name === route.params.icon.name) : 0;
+                                const currentIconIndex = route.params ? icons.findIndex(icon => icon.name === route.params?.icon?.name) : 0;
                                 const previousIconIndex = currentIconIndex === 0 ? icons.length - 1 : currentIconIndex - 1; // Get the previous icon index, wrap around if at the first icon
                             
                                 return (
@@ -193,7 +191,7 @@ export function ColorChangingIcons({ icons, colors, colorNames, title }: ColorCh
                             headerRight: () => {
                                 const nextScreenName = route.params ? getNextScreenName(route.params.icon, icons) : icons[0].name;
                                 return (
-                                    <TouchableOpacity onPress={() => navigation.navigate(nextScreenName)} style={styles.headerButton}>
+                                    <TouchableOpacity onPress={() => navigation.navigate(nextScreenName as never)} style={styles.headerButton}>
                                         <Ionicons name="chevron-forward" size={24} color={colorScheme === 'dark' ? '#fff' : '#000'} />
                                     </TouchableOpacity>
                                 );
@@ -205,7 +203,7 @@ export function ColorChangingIcons({ icons, colors, colorNames, title }: ColorCh
                             <Stack.Screen
                                 key={icon.name}
                                 name={icon.name}
-                                component={IconScreen}
+                                component={IconScreen as any}
                                 initialParams={{ icon, colorIndex: 0, colors, colorNames, icons }} // Pass icons here
                             />
                         ))}
